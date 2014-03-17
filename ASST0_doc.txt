@@ -1,0 +1,119 @@
+what is inside kernel ?
+files
+startup
+lib
+include
+
+arch
+complie
+dev
+sfs
+vm
+
+in kern/conf files for 
+1.sys161 related (all .s files)
+2.machine related (32/64 bit)
+
+But common modules are
+1.Cache and exception handling (kern/arch/mips/*)
+2.Trap handler (kern/arch/mips/locore/*)
+3.System call handler (kern/arch/mips/syscall/*)
+2.Thread system (kern/arch/mips/thread/*)
+5.Virtual system(kern/arch/mips/vm/* + vm/copyinout.c)
+
+1.What is the default compile option that we use for OS/161's virtual memory system?
+dumbvm
+/kern/arch/mips/conf/conf.h
+
+2.In what file would you look to figure out how the various machine registers are labeled in OS/161?
+/kern/arch/mips/include/kern/regdef.h
+/kern/arch/mips/include/specialreg.h
+
+3.What are some of the details which would make a function machine dependent? Why might it be important to maintain this separation, instead of just putting all of the code in one function?
+different platforms have different system board registers.
+so to get current thread stack or current thread upon entry from user mode to kernel mode
+at trap time.
+Idea behind sepration is modular modifiction in kernel code.
+
+4.What will happen if you try to run on a machine with more than 512 MB of memory?
+various properties of MIPS architecture would force RAM to be discontiguous. (/kern/arch/mips/vm/ram.c)
+
+5.What bus (or busses) does OS/161 support?
+LAMEBus  (/kern/arch/sys16/include/bus.h)
+
+6.What would splx(splhigh()) do?
+turn off interrupt.
+and restores the interrupt state. (/kern/arch/locore/trap.c)
+
+7.Why do you think types.h defines explicitly-sized types such as int32_t instead of using the shorter int?
+To provide option to store value in 64bit or 32 bit i.e. provide transperency(/kern/include/types.h)
+
+8.What about type names such as __time_t? What other purpose might these type definitions serve?
+it stores in 64 bit value.
+provide user type __time_t to store value about time in second.
+
+9.What is the interface to a device driver, or what functions must you implement to add a new device?
+provide abstract functionality to add/implement device driver.
+void devnull_create(void);
+void dev_bootstrap(void);
+/kern/arch/mips/include/device.h
+
+10.What is the easiest way to add debug messages to your operating system?
+use DEBUGASSERT (which internally uses kprintf)
+so can use kprintf for debugging.
+/kern/include/lib.h 
+
+11.What synchronization primitives are defined for OS/161?
+1.semaphore
+2.lock
+3.conditional variable
+4.read-write lock
+5.spinlock
+/kern/include/sync.h
+
+12.What is the difference between a thread_yield and a wchan_sleep?
+thread_yield
+yield cpu to another thread/process but the 
+after yielding cpu,thread is in runnable.
+wchan_sleep
+yield cpu to another thread/process but the 
+after yielding cpu thread goes to sleep.
+
+13.What version of OS/161 are you running? Why might this be important to know?
+1.99.05
+/kern/include/version.h
+
+14.What data structure do we use to keep track of the runnable threads in the system?
+list of threads
+/home/cse421/src/kern/include/thread.h
+
+15.Which synchronization primitives are completely provided for you?
+Semaphore(/kern/thread/synch.h)
+
+16.What is a zombie?
+zombie are threads which are exited but not destroyed.
+
+17.What is the purpose of functions like copyin and copyout in copyinout.c? What do they protect against? Where might you want to use these functions?
+purpose
+copyout : copy block of memory from kernel level address to user level address
+copyin  : copy block of memory from user level to kernel level.
+they protect against kernel memory fault.
+when sending data from userspace to kernel or viceversa for eg.in network implmentation send data from application to 
+trasport layer(present in kernel) and getting data from transport layer (from kernel) to user application.
+in /kern/vm/copyinout.c
+
+18.Why are there two separate implementations of malloc: kern/vm/kmalloc.c anduser/lib/libc/stdlib/malloc.c? Give one major difference between the two implementations.
+kmalloc allocation single threaded.
+malloc allocation multi threaded.
+
+19.What happens when you do a read on null:?
+generates EOF 
+and throws anything written to it. (/kern/vfs/devnull.c)
+
+20.What lock protects the current working directory?
+simple lock (/kern/include/synch.h)
+
+
+21.The vnode layer is file system independent. So why is there a file sfs_vnode.c in the sfs directory? What is the purpose of the routines in that file?
+
+

@@ -1,0 +1,10 @@
+simulator/platform = sys161
+
+1.Configuration assignment
+./config_assign.sh 1
+2.Compile assignment
+./compile_assign.sh 1
+3.Build kernel
+./build_kernel.sh
+
+

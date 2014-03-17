@@ -1,0 +1,17 @@
+bindkey -k k1 screen 1
+bindkey -k k2 screen 2
+bind q quit
+bind j focus down
+bind k focus up
+startup_message off
+deflogin off
+
+screen -t "sys161" 1
+stuff "pushd ~/root^M"
+stuff "sys161 -w kernel^M"
+split
+focus down
+screen -t "GDB" 2 
+stuff "os161-gdb kernel^M"
+sleep 2
+stuff "db^M"
