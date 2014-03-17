@@ -8,4 +8,8 @@ build
 /user/testbin/randcall/calls.c
 *.swp
 tags
-cscope.out
+*.out
+*.o
+*.ko
+*.obj
+*.elf
