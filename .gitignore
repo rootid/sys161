@@ -8,4 +8,4 @@ build
 /user/testbin/randcall/calls.c
 *.swp
 tags
-*.out
+cscope.out
